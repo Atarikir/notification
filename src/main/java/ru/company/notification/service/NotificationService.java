@@ -22,15 +22,17 @@ public class NotificationService {
     @Transactional
     public void saveEventNotification(Event event) {
         List<User> users = userRepository.findAllWithPeriods();
-        List<Notification> notifications = new ArrayList<>();
-        users.forEach(user -> {
-            Notification notification = Notification.builder()
-                    .user(user)
-                    .event(event)
-                    .build();
-            notifications.add(notification);
-        });
-        notificationRepository.saveAll(notifications);
+        if (!users.isEmpty()) {
+            List<Notification> notifications = new ArrayList<>();
+            users.forEach(user -> {
+                Notification notification = Notification.builder()
+                        .user(user)
+                        .event(event)
+                        .build();
+                notifications.add(notification);
+            });
+            notificationRepository.saveAll(notifications);
+        }
     }
 
     @Transactional
