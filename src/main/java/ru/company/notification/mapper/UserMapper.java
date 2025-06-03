@@ -1,14 +1,12 @@
 package ru.company.notification.mapper;
 
 import org.mapstruct.*;
-import ru.company.notification.dto.NotificationPeriodDto;
 import ru.company.notification.dto.request.UserRequest;
 import ru.company.notification.dto.response.UserResponse;
 import ru.company.notification.model.NotificationPeriod;
 import ru.company.notification.model.User;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = NotificationPeriodMapper.class)
 public interface UserMapper {
@@ -29,14 +27,11 @@ public interface UserMapper {
                             .endTime(dto.endTime())
                             .user(user)
                             .build())
-                    .collect(Collectors.toList());
-
-            if (user.getNotificationPeriods() == null) {
-                user.setNotificationPeriods(newPeriods);
-            } else {
-                user.getNotificationPeriods().clear();
-                user.getNotificationPeriods().addAll(newPeriods);
-            }
+                    .toList();
+            user.getNotificationPeriods().clear();
+            user.getNotificationPeriods().addAll(newPeriods);
+        } else {
+            user.getNotificationPeriods().clear();
         }
     }
 

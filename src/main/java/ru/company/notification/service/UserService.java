@@ -19,6 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final NotificationService notificationService;
 
     @Transactional
     public UserResponse createUser(UserRequest request) {
@@ -35,7 +36,9 @@ public class UserService {
     public UserResponse updateUser(UUID id, UserRequest request) {
         User existingUser = this.findUserById(id);
         userMapper.updateUserFromRequest(request, existingUser);
-        return userMapper.toUserResponse(userRepository.save(existingUser));
+        User updatedUser = userRepository.save(existingUser);
+        notificationService.markSendingTimeNull(existingUser); // Выставляем время отправки уведомления == null
+        return userMapper.toUserResponse(updatedUser);
     }
 
     @Transactional
